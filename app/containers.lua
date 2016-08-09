@@ -1,5 +1,6 @@
 local lrucache = require "resty.lrucache"
 local common = require "common"
+local swarm = require "swarm"
 
 
 cache, err = lrucache.new(1)
@@ -12,9 +13,14 @@ local handler
 local lock = false
 
 function handler(premature)
-    local rules = common.generate_container_rules("127.0.0.1")
+    cluster_host = os.getenv("DLB_CLUSTER_HOST")
+    if not cluster_host then
+        cluster_host = "172.18.0.1"
+    end
+    ngx.log(ngx.INFO, "collect date from swarm cluster: " .. cluster_host)
+    local rules = swarm.generate_container_rules(cluster_host)
     cache:set("rules", rules)
-    -- ngx.log(ngx.INFO, "load rules successfully")
+    ngx.log(ngx.INFO, "load rules successfully")
     if premature then
         return
     end
