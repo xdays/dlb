@@ -9,7 +9,7 @@ end
 
 local host = ngx.var.host
 local port = ngx.var.server_port
-local uri = ngx.var.uri
+local uri = ngx.var.request_uri
 local urls = rules[host][2]
 local target_url = schedule.select_url(urls, uri)
 local index = math.random(1, #urls[target_url][2])
