@@ -16,6 +16,7 @@ function M.select_url(urls, url)
         else
             i, j = string.find(url, k)
             if j and j > index then
+                index = j
                 ngx.log(ngx.INFO, "uri match: " .. k)
                 target_url = k
             else
