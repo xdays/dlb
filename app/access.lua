@@ -12,7 +12,7 @@ local host = ngx.var.host
 local uri = ngx.var.uri
 --  ngx.log(ngx.INFO, "request uri is: " .. uri)
 
-if uri == "/status" then
+if uri == "/dlb-status" then
     ngx.say(cjson.encode(rules))
     ngx.exit(ngx.HTTP_OK)
 end
