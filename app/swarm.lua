@@ -33,18 +33,23 @@ function M.generate_container_rules(ip)
                 local proto = labels["proto"]
                 local url = common.get_or_default(labels, "url", "/")
                 local ip = common.split(v["Endpoint"]["VirtualIPs"][1]["Addr"], "/")[1]
+                if common.member(labels, "rewrite") then
+                    rewrite = labels["rewrite"]
+                else
+                    rewrite = "0"
+                end
                 if common.member(v["Endpoint"], "Ports") then
                     port = v["Endpoint"]["Ports"][1]["TargetPort"]
                     if not common.member(rules, host) then
                         rules[host] = {proto}
                         rules[host][2] = {}
-                        rules[host][2][url] = {{ip, port}}
+                        rules[host][2][url] = {rewrite, {{ip, port}}}
                     else
                         if not common.member(rules[host][2], url) then
-                            rules[host][2][url] = {{ip, port}}
+                            rules[host][2][url] = {rewrite, {{ip, port}}}
                         else
                             index = #rules[host][2][url] + 1
-                            rules[host][2][url][index] = {ip,port}
+                            rules[host][2][url][2][index] = {ip,port}
                         end
                     end
                 else

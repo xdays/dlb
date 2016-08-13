@@ -1,12 +1,31 @@
 local common = require "common"
+local schedule = require "schedule"
+local cjson = require "cjson.safe"
 
 
-local headers = ngx.req.get_headers()
-if common.member(headers, "referer") then
-    refer = headers["referer"]
-    ngx.log(ngx.ERR, refer)
-    if refer == "https://www.google.com/" then
-        return 
-    end
+local rules, err = cache:get("rules")
+if not rules then
+    error("faild to get cache: " .. (err or "unknown"))
 end
--- ngx.exit(ngx.HTTP_FORBIDDEN)
+
+local host = ngx.var.host
+local uri = ngx.var.uri
+--  ngx.log(ngx.INFO, "request uri is: " .. uri)
+
+if uri == "/dlb-status" then
+    ngx.say(cjson.encode(rules))
+    ngx.exit(ngx.HTTP_OK)
+end
+
+if common.member(rules, host) then
+    urls = rules[host][2]
+    target_url = schedule.select_url(urls, uri)
+else
+    ngx.log(ngx.INFO, "can not find host: " .. host)
+    ngx.exit(ngx.HTTP_NOT_FOUND)
+end
+
+if not target_url then
+    ngx.log(ngx.INFO, "can not find target url for " .. uri)
+    ngx.exit(ngx.HTTP_NOT_FOUND)
+end
