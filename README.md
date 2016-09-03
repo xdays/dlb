@@ -1,5 +1,7 @@
 # DLB
 
+[![](https://images.microbadger.com/badges/version/xdays/dlb.svg)](http://microbadger.com/images/xdays/dlb "Get your own version badge on microbadger.com")
+
 Dynamical Load Balancer based on OpenResty
 
 # Feature
