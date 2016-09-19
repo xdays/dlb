@@ -2,7 +2,7 @@ FROM centos
 MAINTAINER xdays <easedays@gmail.com>
 
 ENV OPENRESTY_ROOT="/usr/local/openresty"
-ENV OPENRESTY_VERSION="1.9.15.1"
+ENV OPENRESTY_VERSION="1.11.2.1"
 ENV LUAROCKS_VERSION="2.3.0"
 ENV PATH=$OPENRESTY_ROOT/luajit/bin:$PATH 
 

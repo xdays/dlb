@@ -16,6 +16,4 @@ if common.member(rules, host) then
     else
         ngx.say('unsupported backend')
     end
-else
-    ngx.say("unsupported host")
 end

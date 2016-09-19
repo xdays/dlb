@@ -1,7 +1,6 @@
 # DLB
 
-[![](https://images.microbadger.com/badges/image/xdays/dlb.svg)](http://microbadger.com/images/xdays/dlb "Get your own image badge on microbadger.com")
-[![](https://images.microbadger.com/badges/version/xdays/dlb.svg)](http://microbadger.com/images/xdays/dlb "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/xdays/dlb.svg)](http://microbadger.com/images/xdays/dlb "image size") [![](https://images.microbadger.com/badges/version/xdays/dlb.svg)](http://microbadger.com/images/xdays/dlb "image version")
 
 Dynamical Load Balancer based on OpenResty
 
