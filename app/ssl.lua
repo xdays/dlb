@@ -5,7 +5,7 @@ local function get_server_domain()
     local server_name, err = ssl.server_name()
     if not server_name then
         ngx.log(ngx.ERR, "failed to get server name: ", err)
-        server_name = "default.everstring.com"
+        server_name = "default.xdays.me"
     end
     local t = common.split(server_name, "%.")
     if #t > 2 then
