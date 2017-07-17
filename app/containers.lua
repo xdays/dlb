@@ -23,7 +23,7 @@ function generate_container_rules()
         local rules = swarm.generate_container_rules(cluster_host, cluster_port)
         cache:set("rules", rules)
     elseif mode == "kubernetes" then
-        local cluster_host = os.getenv("DLB_CLUSTER_HOST") or "kubernetes"
+        local cluster_host = os.getenv("DLB_CLUSTER_HOST") or "10.0.0.1"
         local cluster_port = os.getenv("DLB_CLUSTER_PORT") or "443"
         ngx.log(ngx.INFO, "collect data from kubernetes cluster: " .. cluster_host)
         local rules = kubernetes.generate_container_rules(cluster_host, cluster_port)
