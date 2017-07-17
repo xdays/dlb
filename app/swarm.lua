@@ -4,22 +4,22 @@ local common = require "common"
 local M = {}
 
 
-function M.swarm_client(ip, object)
+function M.swarm_client(ip, port, object)
     local httpc = http.new()
-    local r, err = httpc:request_uri(string.format("http://%s:2375/%s", ip, object))
+    local r, err = httpc:request_uri(string.format("http://%s:%s/%s", ip, port, object))
     if not r then
         error("faild to get data from swarm: " .. (err or "unknown"))
     end
     return r.body
 end
 
-function M.get_swarm_services(ip)
-    return M.swarm_client(ip, "services")
+function M.get_swarm_services(ip, port)
+    return M.swarm_client(ip, port, "services")
 end 
 
-function M.generate_container_rules(ip)
+function M.generate_container_rules(ip, port)
     local httpc = http.new()
-    local service_data = M.get_swarm_services(ip)
+    local service_data = M.get_swarm_services(ip, port)
     local nodes = {}
     local services = {}
     local rules = {}

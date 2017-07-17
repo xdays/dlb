@@ -1,5 +1,4 @@
 local common = require "common"
-local cjson = require "cjson.safe"
 
 local rules, err = cache:get("rules")
 if not rules then
