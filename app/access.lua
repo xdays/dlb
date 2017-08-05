@@ -20,12 +20,11 @@ end
 if common.member(rules, host) then
     urls = rules[host][2]
     target_url = schedule.select_url(urls, uri)
+    if not target_url then
+        ngx.log(ngx.INFO, "can not find target url for " .. uri)
+        ngx.exit(ngx.HTTP_NOT_FOUND)
+    end
 else
     ngx.log(ngx.INFO, "can not find host: " .. host)
-    ngx.exit(ngx.HTTP_NOT_FOUND)
-end
-
-if not target_url then
-    ngx.log(ngx.INFO, "can not find target url for " .. uri)
     ngx.exit(ngx.HTTP_NOT_FOUND)
 end

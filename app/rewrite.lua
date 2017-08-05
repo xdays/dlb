@@ -4,7 +4,7 @@ local schedule = require "schedule"
 
 local rules, err = cache:get("rules")
 if not rules then
-    error("faild to get cache: " .. (err or "unknown"))
+    ngx.log(ngx.ERR, "faild to get cache: " .. (err or "unknown"))
 end
 
 local host = ngx.var.host

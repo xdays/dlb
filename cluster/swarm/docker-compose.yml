@@ -1,0 +1,27 @@
+version: '3.2'
+services:
+  dlb:
+    image: xdays/dlb:v2.0
+    environment:
+      - DLB_MODE=swarm
+      - DLB_ACCESS=public
+    deploy:
+      mode: global
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 200M
+    secrets:
+      - source: default.crt
+        target: /etc/nginx/certs.d/default.crt
+      - source: default.key
+        target: /etc/nginx/certs.d/default.key
+    ports:
+      - "80:80"
+      - "443:443"
+
+secrets:
+  default.crt:
+    file: ../../certs/default.crt
+  default.key:
+    file: ../../certs/default.key
