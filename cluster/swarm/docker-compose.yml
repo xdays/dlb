@@ -3,6 +3,8 @@ services:
   dlb:
     image: xdays/dlb:v1.0
     environment:
+      - DLB_CLUSTER_HOST
+      - DLB_CLUSTER_PORT
       - DLB_MODE=swarm
       - DLB_ACCESS=public
     deploy:
