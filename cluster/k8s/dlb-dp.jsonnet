@@ -16,7 +16,7 @@
         "containers": [
           {
             "name": $.metadata.name, 
-            "image": "xdays/dlb:v1.0", 
+            "image": "xdays/dlb:" + std.extVar("tag"), 
             "imagePullPolicy": "Always",
             "env": [
               {

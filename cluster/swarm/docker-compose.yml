@@ -1,7 +1,7 @@
 version: '3.2'
 services:
   dlb:
-    image: xdays/dlb:v2.0
+    image: xdays/dlb:v1.0
     environment:
       - DLB_MODE=swarm
       - DLB_ACCESS=public
