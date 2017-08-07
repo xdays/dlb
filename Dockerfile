@@ -1,14 +1,11 @@
 FROM centos
-MAINTAINER xdays <easedays@gmail.com>
 
 ENV OPENRESTY_ROOT="/usr/local/openresty"
-ENV OPENRESTY_VERSION="1.11.2.1"
 ENV LUAROCKS_VERSION="2.3.0"
 ENV PATH=$OPENRESTY_ROOT/luajit/bin:$PATH 
 
-ADD openresty.repo /etc/yum.repos.d/
-
-RUN yum install -y openresty-${OPENRESTY_VERSION} epel-release gcc make wget \
+RUN yum-config-manager --add-repo https://openresty.org/yum/centos/OpenResty.repo && \
+    yum install -y openresty epel-release gcc make wget \
     unzip git perl cmake pcre-devel python-devel libffi-devel openssl-devel pam-devel && yum clean all
 RUN mkdir -p /src && cd /src && \
     wget http://keplerproject.github.io/luarocks/releases/luarocks-$LUAROCKS_VERSION.tar.gz && \

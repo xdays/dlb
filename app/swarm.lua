@@ -4,35 +4,35 @@ local common = require "common"
 local M = {}
 
 
-function M.swarm_client(ip, object)
+function M.swarm_client(ip, port, object)
     local httpc = http.new()
-    local r, err = httpc:request_uri(string.format("http://%s:2375/%s", ip, object))
+    local r, err = httpc:request_uri(string.format("http://%s:%s/%s", ip, port, object))
     if not r then
         error("faild to get data from swarm: " .. (err or "unknown"))
     end
     return r.body
 end
 
-function M.get_swarm_services(ip)
-    return M.swarm_client(ip, "services")
+function M.get_swarm_services(ip, port)
+    return M.swarm_client(ip, port, "services")
 end 
 
-function M.generate_container_rules(ip)
+function M.generate_container_rules(ip, port)
     local httpc = http.new()
-    local service_data = M.get_swarm_services(ip)
+    local service_data = M.get_swarm_services(ip, port)
     local nodes = {}
     local services = {}
     local rules = {}
     for k,v in pairs(cjson.decode(service_data)) do
         local service_name = v["Spec"]["Name"]
-        if common.member(v["Spec"], "Labels") then
+        if common.member(v["Spec"], "Labels") and common.member(v["Endpoint"], "VirtualIPs") then
             ngx.log(ngx.INFO, "collect labels from service " .. service_name )
             labels = v["Spec"]["Labels"]
             if labels and common.member(labels, "host") and common.member(labels, "proto") then
                 local host = labels["host"]
                 local proto = labels["proto"]
                 local url = common.get_or_default(labels, "url", "/")
-                local ip = common.split(v["Endpoint"]["VirtualIPs"][1]["Addr"], "/")[1]
+                local ip = common.split(v["Endpoint"]["VirtualIPs"][2]["Addr"], "/")[1]
                 if common.member(labels, "rewrite") then
                     rewrite = labels["rewrite"]
                 else
@@ -57,7 +57,7 @@ function M.generate_container_rules(ip)
                 end
             end
         else
-            ngx.log(ngx.INFO, "service " .. service_name .. " has no labels")
+            ngx.log(ngx.INFO, "service " .. service_name .. " has no label or endpoint")
         end
     end
     return rules

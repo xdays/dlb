@@ -1,6 +1,8 @@
 local lrucache = require "resty.lrucache"
 local common = require "common"
 local swarm = require "swarm"
+local kubernetes = require "kubernetes"
+local cjson = require "cjson.safe"
 
 
 cache, err = lrucache.new(1)
@@ -12,15 +14,27 @@ local delay = 5
 local handler
 local lock = false
 
-function handler(premature)
-    cluster_host = os.getenv("DLB_CLUSTER_HOST")
-    if not cluster_host then
-        cluster_host = "172.18.0.1"
+function generate_container_rules()
+    local mode = os.getenv("DLB_MODE")
+    if mode == "swarm" then
+        local cluster_host = os.getenv("DLB_CLUSTER_HOST") or "172.18.0.1"
+        local cluster_port = os.getenv("DLB_CLUSTER_PORT") or "2375"
+        ngx.log(ngx.INFO, "collect data from swarm cluster: " .. cluster_host)
+        local rules = swarm.generate_container_rules(cluster_host, cluster_port)
+        cache:set("rules", rules)
+    elseif mode == "kubernetes" then
+        local cluster_host = os.getenv("DLB_CLUSTER_HOST") or "10.0.0.1"
+        local cluster_port = os.getenv("DLB_CLUSTER_PORT") or "443"
+        ngx.log(ngx.INFO, "collect data from kubernetes cluster: " .. cluster_host)
+        local rules = kubernetes.generate_container_rules(cluster_host, cluster_port)
+        cache:set("rules", rules)
+    else
+        error("dlb mode is not valid")
     end
-    ngx.log(ngx.INFO, "collect date from swarm cluster: " .. cluster_host)
-    local rules = swarm.generate_container_rules(cluster_host)
-    cache:set("rules", rules)
-    ngx.log(ngx.INFO, "load rules successfully")
+end
+
+function handler(premature)
+    generate_container_rules()
     if premature then
         return
     end
